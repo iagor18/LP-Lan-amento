@@ -44,7 +44,7 @@ html {
    -------------------------------------------------------------------------- */
 :root {
   /* Paleta */
-  --cor-fundo: #efe7d8;          /* lona/pergaminho — fundo geral */
+  --cor-fundo: #ff4d00;          /* lona/pergaminho — fundo geral #efd8d8*/ 
   --cor-fundo-card: #faf6ec;     /* cartão levemente mais claro que o fundo */
   --cor-texto: #2b211a;          /* quase-preto quente, não #000 puro */
   --cor-texto-suave: #5a4c3f;
