@@ -44,8 +44,8 @@ html {
    -------------------------------------------------------------------------- */
 :root {
   /* Paleta */
-  --cor-fundo: #efeed8;          /* lona/pergaminho — fundo geral */ 
-  --cor-fundo-card: #faf6ec;     /* cartão levemente mais claro que o fundo */
+  --cor-fundo: #ffffff;          /* lona/pergaminho — fundo geral */ 
+  --cor-fundo-card: #cfc9b9;     /* cartão levemente mais claro que o fundo */
   --cor-texto: #2b211a;          /* quase-preto quente, não #000 puro */
   --cor-texto-suave: #5a4c3f;
 
@@ -95,7 +95,7 @@ h1,
 h2,
 h3 {
   font-family: var(--fonte-titulo);
-  line-height: 1.2;
+  line-height: 1;
   font-weight: 400; /* Bree Serif já é "cheia", peso 700 fica pesado demais */
 }
 
@@ -300,8 +300,8 @@ header {
     background:
         linear-gradient(
         180deg,
-        rgba(58, 37, 20, 0.9) 10%,
-        rgba(110, 75, 45, 0.9) 100%
+        rgba(39, 19, 3, 0.9) 5%,
+        rgba(0, 0, 0, 0.9) 100%
     ),
         url("fotos/jv\ foto\ \(2\).jpeg");
 
@@ -428,32 +428,30 @@ header {
    e centralizados, em qualquer tamanho de tela.
    -------------------------------------------------------------------------- */
 #professor {
-  background-color: var(--cor-fundo);
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
 
-  background:
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--esp-3);
+
+    text-align: center;
+
+    background:
         linear-gradient(
-        180deg,
-        rgba(247, 216, 192, 0.9) 10%,
-        rgba(255, 240, 227, 0.9) 100%
-    ),
+            180deg,
+            rgba(247, 216, 192, 0.9) 80%,
+            rgba(255, 240, 227, 0.8) 100%
+        ),
         url("fotos/jv\ foto\ \(4\).jpeg");
 
     background-size: cover;
-    background-position:center top;
+    background-position: center top;
     background-repeat: no-repeat;
-
-    text-align: center;
 }
 
-
-/* Como #professor é a própria <section> (e não um filho dela),
-   a regra genérica "section > *" não a alcança — por isso ela
-   precisa da sua própria largura máxima, centralizada com margin auto. */
-#professor {
-  max-width: 900px;
-  margin-left: auto;
-  margin-right: auto;
-}
 
 #professor h1 {
   text-align: center;
@@ -461,15 +459,6 @@ header {
   margin-bottom: var(--esp-4);
 }
 
-/* Flexbox em coluna: a ferramenta certa aqui, porque só precisamos
-   empilhar os itens um embaixo do outro e centralizá-los — Grid
-   (com linhas E colunas) era mais poder do que o layout precisava. */
-#professor {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: var(--esp-3);
-}
 
 /* Foto e vídeo compartilham a mesma largura máxima — assim ficam
    alinhados quando empilhados em coluna, tanto no mobile quanto
