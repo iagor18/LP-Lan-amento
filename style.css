@@ -732,7 +732,7 @@ header {
    mais rico: borda de latão e cantos com "costura" tracejada,
    remetendo a uma etiqueta de couro. */
 .preco {
-  max-width: 420px;
+  max-width: 520px;
   margin: var(--esp-5) auto 0;
   padding: var(--esp-4);
   background-color: var(--cor-couro-escuro);
