@@ -1,0 +1,967 @@
+@charset "UTF-8";
+
+/* ==========================================================================
+   LANDING PAGE — CURSO DE DOMA DE MUARES
+   Identidade visual: couro, latão (fivela/troféu) e oliva de pasto,
+   sobre um fundo tom "lona/pergaminho".
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. RESET BÁSICO
+   Zeramos margin/padding padrão do navegador e forçamos box-sizing: border-box
+   em tudo, pra que padding e border NÃO somem à largura definida em width.
+   Isso evita 90% dos "por que meu elemento estourou o container?" do dia a dia.
+   -------------------------------------------------------------------------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* Respeita quem desativou animações no sistema operacional (acessibilidade) */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. TOKENS DE DESIGN (custom properties)
+   Tudo que se repete no site nasce aqui. Trocar a identidade visual inteira
+   deveria significar mexer só nesse bloco.
+   -------------------------------------------------------------------------- */
+:root {
+  /* Paleta */
+  --cor-fundo: #ffffff;          /* lona/pergaminho — fundo geral */ 
+  --cor-fundo-card: #cfc9b9;     /* cartão levemente mais claro que o fundo */
+  --cor-texto: #2b211a;          /* quase-preto quente, não #000 puro */
+  --cor-texto-suave: #5a4c3f;
+
+  --cor-couro: #6e4425;          /* marca — botões, títulos de destaque */
+  --cor-couro-escuro: #3c2413;   /* seções escuras, header, footer */
+  --cor-couro-claro: #8a5c37;
+
+  --cor-latao: #b8863b;          /* fivela/troféu — accent, hover, ícones */
+  --cor-latao-claro: #d9ae6a;
+
+  --cor-oliva: #48512f;          /* pasto — seções secundárias */
+  --cor-oliva-escura: #333b23;
+
+  --cor-borda: rgba(43, 33, 26, 0.14);
+  --cor-sombra: rgba(43, 33, 26, 0.18);
+
+  /* Tipografia */
+  --fonte-titulo: "Bree Serif", serif;
+  --fonte-corpo: "Inter", system-ui, sans-serif;
+
+  /* Escala de espaçamento (múltiplos de 4px — padrão de mercado) */
+  --esp-1: 0.5rem;
+  --esp-2: 1rem;
+  --esp-3: 1.5rem;
+  --esp-4: 2.5rem;
+  --esp-5: 4rem;
+  --esp-6: 6rem;
+
+  /* Layout */
+  --largura-maxima: 1140px;
+  --raio: 10px;
+  --raio-pequeno: 6px;
+}
+
+/* --------------------------------------------------------------------------
+   3. ESTILOS GLOBAIS
+   -------------------------------------------------------------------------- */
+body {
+  font-family: var(--fonte-corpo);
+  background-color: var(--cor-fundo);
+  color: var(--cor-texto);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--fonte-titulo);
+  line-height: 1;
+  font-weight: 400; /* Bree Serif já é "cheia", peso 700 fica pesado demais */
+}
+
+/* clamp(mínimo, ideal, máximo) = tipografia fluida.
+   O navegador escolhe o valor "ideal" (baseado no viewport, vw),
+   mas nunca deixa passar do mínimo nem do máximo.
+   Resultado: título grande no desktop, legível no celular, sem media query. */
+h1 {
+  font-size: clamp(1.9rem, 4.5vw + 1rem, 3.2rem);
+}
+
+h2 {
+  font-size: clamp(1.5rem, 3vw + 1rem, 2.4rem);
+  text-align: center;
+}
+
+h3 {
+  font-size: clamp(1.1rem, 1.5vw + 0.6rem, 1.4rem);
+}
+
+p {
+  color: var(--cor-texto-suave);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+ul {
+  list-style: none;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Foco visível pra quem navega pelo teclado — item de acessibilidade
+   que muita landing page profissional esquece. */
+a:focus-visible,
+button:focus-visible,
+summary:focus-visible {
+  outline: 3px solid var(--cor-latao);
+  outline-offset: 3px;
+}
+
+section {
+  padding: var(--esp-6) var(--esp-2);
+}
+
+/* Container central reutilizável — em vez de repetir max-width em cada
+   seção, qualquer filho direto de <section> herda o alinhamento. */
+section > * {
+  max-width: var(--largura-maxima);
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Elementos de grid/flex precisam sobrescrever o "width automático"
+   do parágrafo acima — por isso redeclaramos width: 100% aqui. */
+section ul,
+section .faqContainer,
+.preco {
+  width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   4. BOTÃO PRINCIPAL (.botao)
+   Reaproveitado em 5 lugares da página — por isso é uma classe, não um id.
+   -------------------------------------------------------------------------- */
+
+/* @keyframes descreve os "quadros-chave" da animação: em 0% e 100%
+   (início e fim, que são o mesmo estado — por isso o loop fica suave,
+   sem "pulo"), o botão está no tamanho normal e com brilho fraco.
+   Em 50% (meio do ciclo), ele cresce 3,5% e o brilho fica mais forte.
+   O navegador interpola sozinho todos os quadros entre esses pontos. */
+@keyframes pulsarBotao {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow:
+      0 8px 20px -8px var(--cor-sombra),
+      0 0 0 0 rgba(184, 134, 59, 0.45);
+  }
+  50% {
+    transform: scale(1.035);
+    box-shadow:
+      0 8px 20px -8px var(--cor-sombra),
+      0 0 22px 6px rgba(184, 134, 59, 0.5);
+  }
+}
+
+.botao {
+  display: block;
+  width: fit-content;
+  margin: var(--esp-4) auto 0;
+  padding: 1.1rem 2.4rem;
+  background-color: var(--cor-latao);
+  color: var(--cor-couro-escuro);
+  font-family: var(--fonte-corpo);
+  font-weight: 700;
+  font-size: 1rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: var(--raio-pequeno);
+  cursor: pointer;
+  box-shadow: 0 8px 20px -8px var(--cor-sombra);
+  transition: transform 0.15s ease, background-color 0.15s ease;
+
+  /* nome-da-animação | duração | curva de aceleração | repetição.
+     "infinite" mantém o loop rodando pra sempre, sem precisar de JS. */
+  animation: pulsarBotao 2.4s ease-in-out infinite;
+}
+
+.botao:hover {
+  background-color: var(--cor-latao-claro);
+  transform: translateY(-2px);
+  /* Pausa o pulso automático enquanto o mouse está em cima — evita
+     o "scale" da animação brigar com o "translateY" do hover ao
+     mesmo tempo, o que deixaria o movimento tremido. */
+  animation-play-state: paused;
+}
+
+.botao:active {
+  transform: translateY(0);
+}
+
+
+/* --------------------------------------------------------------------------
+   5. CABEÇALHO / NAVBAR
+   -------------------------------------------------------------------------- */
+header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: rgb(26, 26, 26);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.navbar {
+  max-width: var(--largura-maxima);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--esp-2) var(--esp-2);
+}
+
+.logo {
+  font-family: var(--fonte-titulo);
+  font-size: 1.3rem;
+  color: var(--cor-latao-claro);
+}
+
+.menu {
+  display: flex;
+  gap: var(--esp-4);
+}
+
+.menu a {
+  color: #f1e9da;
+  font-size: 0.95rem;
+  font-weight: 500;
+  position: relative;
+  padding-bottom: 4px;
+}
+
+/* Sublinhado animado — sobe da esquerda pra direita no hover.
+   transform: scaleX() é mais performático que animar width. */
+.menu a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--cor-latao);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.25s ease;
+}
+
+.menu a:hover::after {
+  transform: scaleX(1);
+}
+
+.menuBotao {
+  display: none; /* some no desktop, aparece no mobile lá embaixo */
+  background: none;
+  border: none;
+  color: #f1e9da;
+  font-size: 1.4rem;
+  cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+   6. SEÇÃO 1 — HERO (#header)
+   -------------------------------------------------------------------------- */
+#header {
+    background:
+        linear-gradient(
+        180deg,
+        rgba(39, 19, 3, 0.9) 5%,
+        rgba(0, 0, 0, 0.9) 100%
+    ),
+        url("fotos/jv\ foto\ \(2\).jpeg");
+
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+
+    text-align: center;
+}
+   
+#header {
+  /* background: linear-gradient(180deg, var(--cor-couro-escuro) 0%, var(--cor-couro) 100%); */
+  padding-top: var(--esp-4);
+  padding-bottom: var(--esp-3);
+  text-align: center;
+}
+
+#header h1 {
+  color: #f8f2e4;
+  max-width: 820px;
+  margin: 30px auto;
+}
+
+#header p {
+  max-width: 640px;
+  margin: var(--esp-3) auto 0;
+  color: #e3d7c2;
+  font-size: 1.05rem;
+}
+
+#conquistas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: var(--esp-1);
+  margin-top: var(--esp-4);
+}
+
+.autoridade {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.1rem;
+  background-color: rgba(255, 255, 255, 0.07);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 999px;
+  color: #f1e9da;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.autoridade i {
+  color: var(--cor-latao-claro);
+}
+
+/* --------------------------------------------------------------------------
+   7. SEÇÃO 2 — DOR (#dor)
+   -------------------------------------------------------------------------- */
+#dor {
+  background-color: var(--cor-oliva);
+  text-align: center;
+}
+
+#dor h2 {
+  color: #f5f1e6;
+}
+
+#dor > div {
+  margin-top: var(--esp-4);
+}
+
+/* Lista de "dores": cada item vira um cartão com um "x" de couro,
+   como uma etiqueta de correção. */
+#dor #dores {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--esp-2);
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.dores {
+  background-color: rgba(250, 246, 236, 0.06);
+  border: 1px solid rgba(250, 246, 236, 0.15);
+  border-radius: var(--raio-pequeno);
+  padding: var(--esp-2) var(--esp-3);
+  color: #f1ede1;
+  font-weight: 500;
+  position: relative;
+  padding-left: var(--esp-5);
+}
+
+.dores::before {
+  content: "\2715"; /* × unicode — evita depender de ícone externo aqui */
+  position: absolute;
+  left: var(--esp-2);
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--cor-latao-claro);
+  font-weight: 700;
+}
+
+.se {
+  max-width: 640px;
+  margin: var(--esp-4) auto 0;
+  color: #f1ede1;
+  font-size: 1.05rem;
+}
+
+.se + .se {
+  margin-top: var(--esp-2);
+  font-style: italic;
+  color: var(--cor-latao-claro);
+}
+
+.forte {
+  color: var(--cor-latao-claro);
+}
+
+/* --------------------------------------------------------------------------
+   8. SEÇÃO 3 — PROFESSOR (#professor)
+   Flexbox em coluna: título, foto, vídeo, texto e checklist empilhados
+   e centralizados, em qualquer tamanho de tela.
+   -------------------------------------------------------------------------- */
+#professor {
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--esp-3);
+
+    text-align: center;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(247, 216, 192, 0.9) 80%,
+            rgba(255, 240, 227, 0.8) 100%
+        ),
+        url("fotos/jv\ foto\ \(4\).jpeg");
+
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+}
+
+
+#professor h1 {
+  text-align: center;
+  color: var(--cor-couro-escuro);
+  margin-bottom: var(--esp-4);
+}
+
+
+/* Foto e vídeo compartilham a mesma largura máxima — assim ficam
+   alinhados quando empilhados em coluna, tanto no mobile quanto
+   dentro da coluna de mídia do desktop. */
+#professor img {
+  width: 100%;
+  max-width: 260px;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 4px solid var(--cor-latao);
+  box-shadow: 0 12px 24px -10px var(--cor-sombra);
+}
+
+/* Largura do vídeo do YouTube definida aqui: no máximo 400px,
+   mas encolhe em telas menores (width: 100%) sem nunca esticar
+   além disso. aspect-ratio mantém a proporção 16:9 mesmo mudando
+   de largura, então nunca fica achatado ou espichado. */
+#header iframe {
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 16 / 9;
+  height: auto;
+  border-radius: var(--raio);
+  border: none;
+  box-shadow: 0 12px 24px -10px var(--cor-sombra);
+  margin-top: 30px;
+}
+
+#professor > p {
+  max-width: 500px;
+  text-align: center;
+}
+
+#professor #dores {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--esp-2);
+  max-width: 500px;
+  width: 100%;
+}
+
+.dores2 {
+  background-color: var(--cor-fundo-card);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-pequeno);
+  padding: var(--esp-2);
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--cor-couro-escuro);
+  position: relative;
+  padding-top: var(--esp-3);
+}
+
+.dores2::before {
+  content: "\2713"; /* check unicode */
+  display: block;
+  color: #ffffff;
+  background-color: var(--cor-oliva);
+  width: 24px;
+  height: 24px;
+  line-height: 24px;
+  border-radius: 50%;
+  margin: 0 auto 0.5rem;
+  font-size: 0.75rem;
+}
+
+/* --------------------------------------------------------------------------
+   9. SEÇÃO 4 — CONTEÚDO / MÓDULOS (#conteudo)
+   Aqui a numeração (Módulo 1, 2, 3) É uma sequência real do curso,
+   então usar "cartões numerados" faz sentido pedagógico e visual.
+   -------------------------------------------------------------------------- */
+#conteudo {
+  background-color: var(--cor-couro-escuro);
+  text-align: center;
+}
+
+#conteudo h1 {
+  color: #f8f2e4;
+}
+
+#conteudo > p {
+  max-width: 620px;
+  margin: var(--esp-2) auto 0;
+  color: #d9cbb6;
+}
+
+#conteudoCurso {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--esp-3);
+  margin-top: var(--esp-5);
+}
+
+.conteudo {
+  background-color: rgba(250, 246, 236, 0.05);
+  border: 1px solid rgba(250, 246, 236, 0.15);
+  border-radius: var(--raio);
+  padding: var(--esp-4) var(--esp-3);
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.conteudo:hover {
+  border-color: var(--cor-latao);
+  transform: translateY(-4px);
+}
+
+/* "Chapa de latão" com o número do módulo — o elemento-assinatura
+   do design, remetendo a placa de identificação/troféu.
+   counter-increment conta automaticamente os itens .conteudo,
+   então se você adicionar um Módulo 4 no HTML, o número "4"
+   aparece sozinho, sem precisar tocar no CSS. */
+#conteudoCurso {
+  counter-reset: modulo;
+}
+
+.conteudo {
+  counter-increment: modulo;
+}
+
+.conteudo::before {
+  content: counter(modulo);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: 0 auto var(--esp-2);
+  border-radius: 50%;
+  background-color: var(--cor-latao);
+  color: var(--cor-couro-escuro);
+  font-family: var(--fonte-titulo);
+  font-size: 1.2rem;
+}
+
+.conteudo h3 {
+  color: var(--cor-latao-claro);
+  margin-bottom: 0.4rem;
+}
+
+.conteudo p {
+  color: #e3d7c2;
+}
+
+
+/* --------------------------------------------------------------------------
+   10. SEÇÃO 5 — PÚBLICO (#publico)
+   -------------------------------------------------------------------------- */
+#publico {
+  background-color: var(--cor-fundo);
+}
+
+#publico h2 {
+  color: var(--cor-couro-escuro);
+  margin-bottom: var(--esp-5);
+}
+
+.listaPublico {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--esp-3);
+}
+
+.publicoAlvo {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--esp-2);
+  background-color: var(--cor-fundo-card);
+  border: 1px solid var(--cor-borda);
+  border-left: 4px solid var(--cor-couro);
+  border-radius: var(--raio-pequeno);
+  padding: var(--esp-3);
+}
+
+.publicoAlvo i {
+  font-size: 1.4rem;
+  color: var(--cor-couro);
+  margin-top: 2px;
+}
+
+.cabecalhoPublico h3 {
+  color: var(--cor-texto);
+}
+
+/* O quarto item ("Não é para quem...") é uma exclusão, não um convite —
+   faz sentido destacá-lo visualmente de forma diferente dos outros 3. */
+.publicoAlvo:last-child {
+  border-left-color: var(--cor-latao);
+  background-color: #f6ece0;
+}
+
+.publicoAlvo:last-child i {
+  color: var(--cor-latao);
+}
+
+/* --------------------------------------------------------------------------
+   11. SEÇÃO 6 — COMO FUNCIONA (#comoFunciona)
+   -------------------------------------------------------------------------- */
+#comoFunciona {
+  background-color: var(--cor-oliva-escura);
+  text-align: center;
+}
+
+#comoFunciona h2 {
+  color: #f5f1e6;
+  margin-bottom: var(--esp-5);
+}
+
+.listaPublico2 {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--esp-3);
+}
+
+.publicoAlvo2 {
+  background-color: rgba(250, 246, 236, 0.06);
+  border: 1px solid rgba(250, 246, 236, 0.15);
+  border-radius: var(--raio);
+  padding: var(--esp-4) var(--esp-2);
+}
+
+.publicoAlvo2 i {
+  font-size: 1.6rem;
+  color: var(--cor-latao-claro);
+  margin-bottom: var(--esp-1);
+}
+
+.cabecalhoPublico2 h3 {
+  color: #f1ede1;
+  font-size: 1rem;
+}
+
+/* --------------------------------------------------------------------------
+   12. SEÇÃO 7 — OFERTA (#oferta)
+   -------------------------------------------------------------------------- */
+#oferta {
+  background-color: var(--cor-fundo);
+  text-align: center;
+}
+
+#oferta h2 {
+  color: var(--cor-couro-escuro);
+  margin-bottom: var(--esp-4);
+}
+
+#listaOferta {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--esp-2);
+  max-width: 480px;
+  margin: 0 auto;
+  text-align: left;
+}
+
+.ofertaConteudo {
+  display: flex;
+  align-items: center;
+  gap: var(--esp-2);
+  font-weight: 600;
+}
+
+.ofertaConteudo i {
+  color: var(--cor-oliva);
+  font-size: 1.2rem;
+}
+
+/* Cartão de preço — o "troféu" da página, por isso ganha o tratamento
+   mais rico: borda de latão e cantos com "costura" tracejada,
+   remetendo a uma etiqueta de couro. */
+.preco {
+  max-width: 520px;
+  margin: var(--esp-5) auto 0;
+  padding: var(--esp-4);
+  background-color: var(--cor-couro-escuro);
+  border-radius: var(--raio);
+  border: 2px dashed var(--cor-latao);
+  box-shadow: 0 16px 32px -14px var(--cor-sombra);
+}
+
+.textoPreco {
+  color: var(--cor-latao-claro);
+  letter-spacing: 0.15em;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.preco h3 {
+  color: #e3d7c2;
+  font-size: 1rem;
+  margin-top: var(--esp-2);
+  font-weight: 400;
+}
+
+.precoAntigo {
+  text-decoration: line-through;
+  color: #a8967f;
+}
+
+.preco h1 {
+  color: #f8f2e4;
+  margin-top: 0.3rem;
+}
+
+.avista {
+  color: #d9cbb6;
+  font-size: 0.85rem;
+  margin-top: var(--esp-1);
+}
+
+#oferta .botao {
+  margin-top: var(--esp-5);
+}
+
+/* --------------------------------------------------------------------------
+   13. SEÇÃO 8 — FAQ (#faq)
+   -------------------------------------------------------------------------- */
+#faq {
+  background-color: var(--cor-fundo-card);
+}
+
+#faq h2 {
+  color: var(--cor-couro-escuro);
+}
+
+.faqSubtitulo {
+  text-align: center;
+  max-width: 480px;
+  margin: var(--esp-1) auto var(--esp-4);
+}
+
+.faqContainer {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: var(--esp-2);
+}
+
+details {
+  background-color: var(--cor-fundo-card);
+  border: 1px solid var(--cor-borda);
+  border-radius: var(--raio-pequeno);
+  padding: var(--esp-2) var(--esp-3);
+}
+
+summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--cor-couro-escuro);
+  list-style: none; /* remove a seta padrão do navegador */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Some navegadores (Chrome/Safari) usam ::-webkit-details-marker
+   em vez de list-style — por isso removemos os dois. */
+summary::-webkit-details-marker {
+  display: none;
+}
+
+summary::after {
+  content: "+";
+  font-size: 1.3rem;
+  color: var(--cor-latao);
+  transition: transform 0.2s ease;
+}
+
+/* :is(...) agrupa seletores parecidos numa linha só.
+   Aqui: "quando o <details> pai estiver aberto, gire o +". */
+details[open] summary::after {
+  transform: rotate(45deg);
+}
+
+details p {
+  margin-top: var(--esp-2);
+  font-size: 0.95rem;
+}
+
+/* --------------------------------------------------------------------------
+   14. RODAPÉ
+   -------------------------------------------------------------------------- */
+footer#footer {
+  background-color: var(--cor-couro-escuro);
+  padding: var(--esp-5) var(--esp-2);
+}
+
+.footerContainer {
+  max-width: var(--largura-maxima);
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footerContainer h2 {
+  color: #f8f2e4;
+}
+
+.footerDescricao {
+  max-width: 520px;
+  margin: var(--esp-2) auto 0;
+  color: #d9cbb6;
+}
+
+.footerLinha {
+  width: 60px;
+  height: 2px;
+  background-color: var(--cor-latao);
+  margin: var(--esp-4) auto;
+}
+
+.footerRodape {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  color: #a8967f;
+  font-size: 0.85rem;
+}
+
+.footerRodape span {
+  color: var(--cor-latao-claro);
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   15. REVELAÇÃO SUAVE AO ROLAR A PÁGINA
+   Esta classe sozinha NÃO faz nada sozinha: ela só define os dois estados
+   (escondido e visível). Quem decide QUANDO trocar de um pro outro é o
+   JavaScript (IntersectionObserver), no arquivo jv.js.
+
+   Detalhe importante de acessibilidade/robustez: nenhum elemento do HTML
+   nasce com a classe "reveal" — é o próprio JS que a adiciona. Ou seja,
+   se por qualquer motivo o JS não carregar, o conteúdo continua 100%
+   visível do jeito normal, em vez de ficar invisível pra sempre.
+   ========================================================================== */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+
+.reveal.visivel {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ==========================================================================
+   16. RESPONSIVO — mobile-first
+   Escrevemos o CSS "base" pensando no celular (uma coluna, menu escondido).
+   Os breakpoints abaixo, com min-width, vão *adicionando* regras conforme
+   a tela cresce. É o padrão de mercado: menos sobrescrita, mais previsível.
+   ========================================================================== */
+
+/* Tablet e acima */
+@media (min-width: 640px) {
+  #listaOferta {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+/* Desktop pequeno */
+@media (min-width: 768px) {
+  #dor #dores,
+  #conteudoCurso,
+  .listaPublico {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Desktop — menu completo aparece, hambúrguer some */
+@media (min-width: 900px) {
+  #conteudoCurso {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Abaixo de 900px: vira o menu mobile */
+@media (max-width: 899px) {
+  .menu {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    flex-direction: column;
+    background-color: var(--cor-couro-escuro);
+    padding: var(--esp-2);
+    gap: var(--esp-2);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+
+    /* Escondido por padrão. O jv.js deve alternar a classe abaixo
+       (ou o nome que você já usa lá) para mostrar o menu. */
+    display: none;
+  }
+
+  /* Ajuste o nome desta classe para bater com o que o seu jv.js
+     adiciona/remove no clique do botão hambúrguer. */
+  .menu.aberto {
+    display: flex;
+  }
+
+  .menuBotao {
+    display: block;
+  }
+}
