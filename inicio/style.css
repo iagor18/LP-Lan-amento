@@ -49,6 +49,8 @@ html {
   --cor-texto: #2b211a;          /* quase-preto quente, não #000 puro */
   --cor-texto-suave: #5a4c3f;
 
+  --corBotao:rgb(2, 255, 2);
+
   --cor-couro: #6e4425;          /* marca — botões, títulos de destaque */
   --cor-couro-escuro: #3c2413;   /* seções escuras, header, footer */
   --cor-couro-claro: #8a5c37;
@@ -179,13 +181,13 @@ section .faqContainer,
     transform: scale(1);
     box-shadow:
       0 8px 20px -8px var(--cor-sombra),
-      0 0 0 0 rgba(184, 134, 59, 0.45);
+      0 0 0 0 rgba(3, 250, 52, 0.45);
   }
   50% {
     transform: scale(1.035);
     box-shadow:
       0 8px 20px -8px var(--cor-sombra),
-      0 0 22px 6px rgba(184, 134, 59, 0.5);
+      0 0 22px 6px rgba(0, 255, 47, 0.5);
   }
 }
 
@@ -194,7 +196,7 @@ section .faqContainer,
   width: fit-content;
   margin: var(--esp-4) auto 0;
   padding: 1.1rem 2.4rem;
-  background-color: var(--cor-latao);
+  background-color: var(--corBotao);
   color: var(--cor-couro-escuro);
   font-family: var(--fonte-corpo);
   font-weight: 700;
