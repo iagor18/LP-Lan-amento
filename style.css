@@ -632,7 +632,7 @@ header {
   display: flex;
   align-items: flex-start;
   gap: var(--esp-2);
-  background-color: var(--cor-fundo-card);
+  background-color: var(--cor-fundo);
   border: 1px solid var(--cor-borda);
   border-left: 4px solid var(--cor-couro);
   border-radius: var(--raio-pequeno);
@@ -653,7 +653,7 @@ header {
    faz sentido destacá-lo visualmente de forma diferente dos outros 3. */
 .publicoAlvo:last-child {
   border-left-color: var(--cor-latao);
-  background-color: #f6ece0;
+  background-color: #fce1e1;
 }
 
 .publicoAlvo:last-child i {
