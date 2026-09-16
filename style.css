@@ -296,68 +296,104 @@ header {
 }
 
 /* --------------------------------------------------------------------------
-   6. SEÇÃO 1 — HERO (#header)
+  6. SEÇÃO 1 — HERO (#header)
    -------------------------------------------------------------------------- */
 #header {
-    background:
-        linear-gradient(
-        180deg,
-        rgba(39, 19, 3, 0.9) 5%,
-        rgba(0, 0, 0, 0.9) 100%
-    ),
-        url("fotos/jv\ foto\ \(2\).jpeg");
+    min-height: 100vh;
 
+    background-image: url("fotos/capaMobile.png");
     background-size: cover;
-    background-position: center;
+    background-position: center bottom;
     background-repeat: no-repeat;
+
+    padding: 0 20px;
+    box-sizing: border-box;
 
     text-align: center;
 }
-   
-#header {
-  /* background: linear-gradient(180deg, var(--cor-couro-escuro) 0%, var(--cor-couro) 100%); */
-  padding-top: var(--esp-1);
-  padding-bottom: var(--esp-1);
-  text-align: center;
+
+.heroConteudo {
+    width: 100%;
+    max-width: 390px;
+
+    margin: 0 auto;
+    padding-top: 40px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
-#header h1 {
-  color: #f8f2e4;
-  max-width: 820px;
-  margin: 12px auto;
-  font-size: 1.5rem;
+
+/* TÍTULO */
+
+.heroConteudo h1 {
+    margin: 0;
+
+    color: #f8f2e4;
+
+    font-size: 1.65rem;
+    line-height: 1.05;
 }
 
-#header p {
-  max-width: 640px;
-  margin: var(--esp-3) auto 0;
-  color: #e3d7c2;
-  font-size: 1.05rem;
+
+/* TEXTO DE APOIO */
+
+.heroConteudo p {
+    width: 90%;
+
+    margin: 18px auto 0;
+
+    color: #e3d7c2;
+
+    font-size: 1rem;
+    line-height: 1.25;
 }
+
+
+/* CONQUISTAS */
 
 #conquistas {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: var(--esp-1);
-  margin-top: var(--esp-4);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+
+    gap: 7px;
+
+    margin: 18px 0 0;
+    padding: 0;
 }
 
 .autoridade {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.6rem 1.1rem;
-  background-color: rgba(255, 255, 255, 0.07);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 999px;
-  color: #f1e9da;
-  font-size: 0.85rem;
-  font-weight: 600;
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 6px 9px;
+
+    background: rgba(0, 0, 0, 0.25);
+
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 999px;
+
+    color: #f8f2e4;
+
+    font-size: 0.72rem;
+    font-weight: 600;
 }
 
 .autoridade i {
-  color: var(--cor-latao-claro);
+    color: var(--cor-latao-claro);
+}
+
+
+/* BOTÃO */
+
+.heroConteudo .botao {
+    width: 90%;
+
+    margin-top: 18px;
 }
 
 /* --------------------------------------------------------------------------
@@ -918,26 +954,68 @@ footer#footer {
    ========================================================================== */
 
 /* Tablet e acima */
-@media (min-width: 640px) {
-  #listaOferta {
-    grid-template-columns: repeat(1, 1fr);
-  }
-}
-
-/* Desktop pequeno */
-@media (min-width: 768px) {
-  #dor #dores,
-  #conteudoCurso,
-  .listaPublico {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-/* Desktop — menu completo aparece, hambúrguer some */
 @media (min-width: 900px) {
-  #conteudoCurso {
-    grid-template-columns: repeat(3, 1fr);
-  }
+
+    #header {
+        min-height: 100vh;
+
+        background-image: url("fotos/capaDesktop.png");
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+
+        padding: 0 52% 0 6%;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
+
+    /* Bloco inteiro da esquerda */
+    .heroConteudo {
+        width: 100%;
+        max-width: 650px;
+
+        padding-top: 0;
+        margin: 0 auto;
+    }
+
+    /* Título */
+    .heroConteudo h1 {
+        max-width: 650px;
+
+        font-size: 2.3rem;
+        line-height: 1.08;
+
+        margin: 0 auto;
+    }
+
+    /* Conquistas */
+    #conquistas {
+        max-width: 600px;
+
+        gap: 10px;
+
+        margin-top: 25px;
+    }
+
+    .autoridade {
+        padding: 9px 15px;
+
+        font-size: 0.9rem;
+    }
+
+    /* Botão */
+    .heroConteudo .botao {
+        width: 100%;
+        max-width: 520px;
+
+        margin-top: 28px;
+
+        padding: 18px 20px;
+        font-size: 1rem;
+    }
 }
 
 /* Abaixo de 900px: vira o menu mobile */
